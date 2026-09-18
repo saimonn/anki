@@ -4,8 +4,16 @@ ARG ANKI_VERSION
 
 RUN apk update && apk add --no-cache build-base protobuf && rm -rf /var/cache/apk/*
 
-COPY . .
+# Copy only what's needed for cargo build
+COPY Cargo.toml Cargo.lock ./
+COPY rslib/ ./rslib/
+COPY build/ ./build/
+COPY ftl/ ./ftl/
+COPY pylib/rsbridge/ ./pylib/rsbridge/
+COPY tools/minilints/ ./tools/minilints/
+COPY docs/syncserver/ ./docs/syncserver/
 
+# Build dependencies
 RUN cargo build --release -p anki-sync-server && \
     mkdir -p /anki-server/bin && \
     cp target/release/anki-sync-server /anki-server/bin/anki-sync-server
