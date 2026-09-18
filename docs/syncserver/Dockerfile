@@ -11,6 +11,7 @@ COPY build/ ./build/
 COPY ftl/ ./ftl/
 COPY pylib/rsbridge/ ./pylib/rsbridge/
 COPY tools/minilints/ ./tools/minilints/
+COPY proto/ ./proto/
 COPY docs/syncserver/ ./docs/syncserver/
 
 # Build dependencies
