@@ -4,11 +4,11 @@ ARG ANKI_VERSION
 
 RUN apk update && apk add --no-cache build-base protobuf && rm -rf /var/cache/apk/*
 
-RUN cargo install --git https://github.com/ankitects/anki.git \
---tag ${ANKI_VERSION} \
---root /anki-server  \
---locked \
-anki-sync-server
+COPY . .
+
+RUN cargo build --release -p anki-sync-server && \
+    mkdir -p /anki-server/bin && \
+    cp target/release/anki-sync-server /anki-server/bin/anki-sync-server
 
 FROM alpine:3.23
 
@@ -24,7 +24,7 @@ RUN apk update && apk add --no-cache bash su-exec && rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docs/syncserver/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
